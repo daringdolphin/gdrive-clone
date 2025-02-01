@@ -47,3 +47,7 @@ yarn-error.log*
 
 # prettier
 .prettierrc
+
+# sandbox
+sandbox
+src/app/sandbox

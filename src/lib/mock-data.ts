@@ -1,83 +1,83 @@
 export type File = {
-  id: string
+  id: number
   name: string
   type: 'file'
   url: string
-  parent: string
-  size: string
+  parent: number
+  size: number
 }
 
 export type Folder = {
-  id: string
+  id: number
   name: string
   type: 'folder'
-  parent: string | null
+  parent: number
 }
 
 export const mockFolders: Folder[] = [
-  { id: 'root', name: 'root', type: 'folder', parent: null },
-  { id: '1', name: 'Documents', type: 'folder', parent: 'root' },
-  { id: '2', name: 'Images', type: 'folder', parent: 'root' },
-  { id: '3', name: 'Work', type: 'folder', parent: 'root' },
-  { id: '8', name: 'Presentations', type: 'folder', parent: '3' },
+  { id: 1, name: 'root', type: 'folder', parent: 0 },
+  { id: 2, name: 'Documents', type: 'folder', parent: 1 },
+  { id: 3, name: 'Images', type: 'folder', parent: 1 },
+  { id: 4, name: 'Work', type: 'folder', parent: 1 },
+  { id: 5, name: 'Presentations', type: 'folder', parent: 4 },
 ]
 
 export const mockFiles: File[] = [
   {
-    id: '4',
+    id: 6,
     name: 'Resume.pdf',
     type: 'file',
     url: '/files/resume.pdf',
-    parent: 'root',
-    size: '1.2 MB',
+    parent: 1,
+    size: 1200,
   },
   {
-    id: '5',
+    id: 7,
     name: 'Project Proposal.docx',
     type: 'file',
     url: '/files/proposal.docx',
-    parent: '1',
-    size: '2.5 MB',
+    parent: 2,
+    size: 2500,
   },
   {
-    id: '6',
+    id: 8,
     name: 'Vacation.jpg',
     type: 'file',
     url: '/files/vacation.jpg',
-    parent: '2',
-    size: '3.7 MB',
+    parent: 3,
+    size: 3700,
   },
   {
-    id: '7',
+    id: 9,
     name: 'Profile Picture.png',
     type: 'file',
     url: '/files/profile.png',
-    parent: '2',
-    size: '1.8 MB',
+    parent: 3,
+    size: 1800,
   },
   {
-    id: '9',
+    id: 10,
     name: 'Q4 Report.pptx',
     type: 'file',
     url: '/files/q4-report.pptx',
-    parent: '8',
-    size: '5.2 MB',
+    parent: 5,
+    size: 5200,
   },
   {
-    id: '10',
+    id: 11,
     name: 'Budget.xlsx',
     type: 'file',
     url: '/files/budget.xlsx',
-    parent: '3',
-    size: '1.5 MB',
+    parent: 4,
+    size: 1500,
   },
   {
-    id: '11',
+    id: 12,
     name: 'Test.txt',
     type: 'file',
     url: '/files/test.txt',
-    parent: '2',
-    size: '1.5 MB',
+    parent: 3,
+    size: 1500,
   },
 ]
 
