@@ -1,12 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { File, mockFiles } from "../lib/mock-data"
+import { mockFiles } from "../lib/mock-data"
 import { Folder, FileIcon, Upload, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "~/components/ui/button"
-<<<<<<< HEAD
-=======
 
 export default function GoogleDriveClone() {
   const [currentFolder, setCurrentFolder] = useState<string | null>(null)
@@ -39,7 +37,6 @@ export default function GoogleDriveClone() {
   const handleUpload = () => {
     alert("Upload functionality would be implemented here")
   }
->>>>>>> 4a0ccbddc23ec27379f6f68870828cbb95b7f4d8
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
@@ -53,7 +50,7 @@ export default function GoogleDriveClone() {
             >
               My Drive
             </Button>
-            {getBreadcrumbs().map((folder, index) => (
+            {getBreadcrumbs().map((folder) => (
               <div key={folder.id} className="flex items-center">
                 <ChevronRight className="mx-2 text-gray-500" size={16} />
                 <Button
