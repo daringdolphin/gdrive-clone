@@ -5,8 +5,42 @@ import { File, mockFiles } from "../lib/mock-data"
 import { Folder, FileIcon, Upload, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "~/components/ui/button"
+<<<<<<< HEAD
+=======
 
-export default function HomePage() {
+export default function GoogleDriveClone() {
+  const [currentFolder, setCurrentFolder] = useState<string | null>(null)
+
+  const getCurrentFiles = () => {
+    return mockFiles.filter((file) => file.parent === currentFolder)
+  }
+
+  const handleFolderClick = (folderId: string) => {
+    setCurrentFolder(folderId)
+  }
+
+  const getBreadcrumbs = () => {
+    const breadcrumbs = []
+    let currentId = currentFolder
+
+    while (currentId !== null) {
+      const folder = mockFiles.find((file) => file.id === currentId)
+      if (folder) {
+        breadcrumbs.unshift(folder)
+        currentId = folder.parent
+      } else {
+        break
+      }
+    }
+
+    return breadcrumbs
+  }
+
+  const handleUpload = () => {
+    alert("Upload functionality would be implemented here")
+  }
+>>>>>>> 4a0ccbddc23ec27379f6f68870828cbb95b7f4d8
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
       <div className="max-w-6xl mx-auto">
@@ -44,20 +78,36 @@ export default function HomePage() {
               <div className="col-span-3">Type</div>
               <div className="col-span-3">Size</div>
             </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
+          </div>
+          <ul>
+            {getCurrentFiles().map((file) => (
+              <li key={file.id} className="px-6 py-4 border-b border-gray-700 hover:bg-gray-750">
+                <div className="grid grid-cols-12 gap-4 items-center">
+                  <div className="col-span-6 flex items-center">
+                    {file.type === "folder" ? (
+                      <button
+                        onClick={() => handleFolderClick(file.id)}
+                        className="flex items-center text-gray-100 hover:text-blue-400"
+                      >
+                        <Folder className="mr-3" size={20} />
+                        {file.name}
+                      </button>
+                    ) : (
+                      <Link href={file.url ?? "#"} className="flex items-center text-gray-100 hover:text-blue-400">
+                        <FileIcon className="mr-3" size={20} />
+                        {file.name}
+                      </Link>
+                    )}
+                  </div>
+                  <div className="col-span-3 text-gray-400">{file.type === "folder" ? "Folder" : "File"}</div>
+                  <div className="col-span-3 text-gray-400">{file.type === "folder" ? "--" : "2 MB"}</div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
-    </main>
-  );
+    </div>
+  )
 }
+
