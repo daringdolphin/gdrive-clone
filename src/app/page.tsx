@@ -7,7 +7,7 @@ import { Button } from '~/components/ui/button'
 import { FileRow, FolderRow } from './file-row'
 
 export default function GoogleDriveClone() {
-  const [currentFolder, setCurrentFolder] = useState<string>('root')
+  const [currentFolder, setCurrentFolder] = useState<number>(1)
 
   const getCurrentFiles = () => {
     return mockFiles.filter((file) => file.parent === currentFolder)
@@ -17,19 +17,19 @@ export default function GoogleDriveClone() {
     return mockFolders.filter((folder) => folder.parent === currentFolder)
   }
 
-  const handleFolderClick = (folderId: string) => {
+  const handleFolderClick = (folderId: number) => {
     setCurrentFolder(folderId)
   }
 
   const breadcrumbs = useMemo(() => {
     const breadcrumbs: typeof mockFolders = []
-    let currentId: string = currentFolder
+    let currentId = currentFolder
 
-    while (currentId !== 'root') {
+    while (currentId !== 1) {
       const folder = mockFolders.find((folder) => folder.id === currentId)
       if (folder) {
         breadcrumbs.unshift(folder)
-        currentId = folder.parent ?? 'root'
+        currentId = folder.parent
       } else {
         break
       }
@@ -48,7 +48,7 @@ export default function GoogleDriveClone() {
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center">
             <Button
-              onClick={() => setCurrentFolder('root')}
+              onClick={() => setCurrentFolder(1)}
               variant="ghost"
               className="text-gray-300 hover:text-white mr-2"
             >
