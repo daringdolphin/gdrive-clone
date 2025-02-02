@@ -1,12 +1,10 @@
 'use client'
 
-import { useMemo } from 'react'
 import { Upload, ChevronRight } from 'lucide-react'
-import { Button } from '~/components/ui/button'
 import { FileRow, FolderRow } from './file-row'
 import type { files_table, folders_table } from '~/server/db/schema'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 
 export default function DriveContents(props: {
   files: (typeof files_table.$inferSelect)[]
@@ -14,32 +12,6 @@ export default function DriveContents(props: {
   breadcrumbs: (typeof folders_table.$inferSelect)[]
 }) {
   const { files, folders, breadcrumbs } = props
-  // const router = useRouter()
-
-  // const handleFolderClick = (folderId: number) => {
-  //   router.push(`/f/${folderId}`)
-  // }
-
-  // const breadcrumbs = useMemo(() => {
-  //   const breadcrumbs: typeof folders = []
-  //   let currentId = 1
-
-  //   while (currentId !== 1) {
-  //     const folder = folders.find((folder) => folder.id === currentId)
-  //     if (folder) {
-  //       breadcrumbs.unshift(folder)
-  //       currentId = folder.parent
-  //     } else {
-  //       break
-  //     }
-  //   }
-
-  //   return breadcrumbs
-  // }, [folders])
-
-  const handleUpload = () => {
-    alert('Upload functionality would be implemented here')
-  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
@@ -61,13 +33,14 @@ export default function DriveContents(props: {
               </div>
             ))}
           </div>
-          <Button
-            onClick={handleUpload}
-            className="bg-blue-600 text-white hover:bg-blue-700"
-          >
-            <Upload className="mr-2" size={20} />
-            Upload
-          </Button>
+          <div>
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </div>
         </div>
         <div className="bg-gray-800 rounded-lg shadow-xl">
           <div className="px-6 py-4 border-b border-gray-700">
