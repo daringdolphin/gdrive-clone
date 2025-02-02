@@ -1,25 +1,26 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Upload, ChevronRight } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { FileRow, FolderRow } from './file-row'
 import type { files, folders } from '~/server/db/schema'
+import { useRouter } from 'next/navigation'
 
 export default function DriveContents(props: {
   files: (typeof files.$inferSelect)[]
   folders: (typeof folders.$inferSelect)[]
 }) {
   const { files, folders } = props
-  const [currentFolder, setCurrentFolder] = useState<number>(1)
+  const router = useRouter()
 
   const handleFolderClick = (folderId: number) => {
-    setCurrentFolder(folderId)
+    router.push(`/f/${folderId}`)
   }
 
   const breadcrumbs = useMemo(() => {
     const breadcrumbs: typeof folders = []
-    let currentId = currentFolder
+    let currentId = 1
 
     while (currentId !== 1) {
       const folder = folders.find((folder) => folder.id === currentId)
@@ -32,7 +33,7 @@ export default function DriveContents(props: {
     }
 
     return breadcrumbs
-  }, [currentFolder, folders])
+  }, [folders])
 
   const handleUpload = () => {
     alert('Upload functionality would be implemented here')
@@ -44,7 +45,7 @@ export default function DriveContents(props: {
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center">
             <Button
-              onClick={() => setCurrentFolder(1)}
+              onClick={() => router.push('/f/1')}
               variant="ghost"
               className="text-gray-300 hover:text-white mr-2"
             >
