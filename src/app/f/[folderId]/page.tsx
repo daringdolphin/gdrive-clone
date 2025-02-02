@@ -6,6 +6,25 @@ import {
 } from '~/server/db/schema'
 import DriveContents from '~/app/drive-contents'
 
+async function getBreadcrumbs(folderId: number) {
+  const parents = []
+  let currentId: number | null = folderId
+  while (currentId !== null && currentId !== 0) {
+    const folder = await db
+      .select()
+      .from(foldersSchema)
+      .where(eq(foldersSchema.id, currentId))
+    console.log(currentId, folder)
+    if (!folder[0]) {
+      throw new Error('Folder not found')
+    }
+
+    parents.unshift(folder[0])
+    currentId = folder[0]?.parent ?? null
+  }
+  return parents
+}
+
 export default async function GoogleDriveClone(props: {
   params: Promise<{ folderId: string }>
 }) {
@@ -16,14 +35,25 @@ export default async function GoogleDriveClone(props: {
     return <div>Invalid folder ID</div>
   }
 
-  const files = await db
+  const filesPromise = db
     .select()
     .from(filesSchema)
     .where(eq(filesSchema.parent, parsedFolderId))
-  const folders = await db
+
+  const foldersPromise = db
     .select()
     .from(foldersSchema)
     .where(eq(foldersSchema.parent, parsedFolderId))
 
-  return <DriveContents files={files} folders={folders} />
+  const breadcrumbsPromise = getBreadcrumbs(parsedFolderId)
+
+  const [files, folders, breadcrumbs] = await Promise.all([
+    filesPromise,
+    foldersPromise,
+    breadcrumbsPromise,
+  ])
+
+  return (
+    <DriveContents files={files} folders={folders} breadcrumbs={breadcrumbs} />
+  )
 }

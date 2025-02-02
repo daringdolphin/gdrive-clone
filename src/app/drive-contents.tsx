@@ -6,34 +6,36 @@ import { Button } from '~/components/ui/button'
 import { FileRow, FolderRow } from './file-row'
 import type { files, folders } from '~/server/db/schema'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function DriveContents(props: {
   files: (typeof files.$inferSelect)[]
   folders: (typeof folders.$inferSelect)[]
+  breadcrumbs: (typeof folders.$inferSelect)[]
 }) {
-  const { files, folders } = props
-  const router = useRouter()
+  const { files, folders, breadcrumbs } = props
+  // const router = useRouter()
 
-  const handleFolderClick = (folderId: number) => {
-    router.push(`/f/${folderId}`)
-  }
+  // const handleFolderClick = (folderId: number) => {
+  //   router.push(`/f/${folderId}`)
+  // }
 
-  const breadcrumbs = useMemo(() => {
-    const breadcrumbs: typeof folders = []
-    let currentId = 1
+  // const breadcrumbs = useMemo(() => {
+  //   const breadcrumbs: typeof folders = []
+  //   let currentId = 1
 
-    while (currentId !== 1) {
-      const folder = folders.find((folder) => folder.id === currentId)
-      if (folder) {
-        breadcrumbs.unshift(folder)
-        currentId = folder.parent
-      } else {
-        break
-      }
-    }
+  //   while (currentId !== 1) {
+  //     const folder = folders.find((folder) => folder.id === currentId)
+  //     if (folder) {
+  //       breadcrumbs.unshift(folder)
+  //       currentId = folder.parent
+  //     } else {
+  //       break
+  //     }
+  //   }
 
-    return breadcrumbs
-  }, [folders])
+  //   return breadcrumbs
+  // }, [folders])
 
   const handleUpload = () => {
     alert('Upload functionality would be implemented here')
@@ -44,23 +46,18 @@ export default function DriveContents(props: {
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center">
-            <Button
-              onClick={() => router.push('/f/1')}
-              variant="ghost"
-              className="text-gray-300 hover:text-white mr-2"
-            >
+            <Link href="/f/1" className="text-gray-300 hover:text-white mr-2">
               My Drive
-            </Button>
+            </Link>
             {breadcrumbs.map((folder) => (
               <div key={folder.id} className="flex items-center">
                 <ChevronRight className="mx-2 text-gray-500" size={16} />
-                <Button
-                  onClick={() => handleFolderClick(folder.id)}
-                  variant="ghost"
+                <Link
+                  href={`/f/${folder.id}`}
                   className="text-gray-300 hover:text-white"
                 >
                   {folder.name}
-                </Button>
+                </Link>
               </div>
             ))}
           </div>
@@ -82,11 +79,7 @@ export default function DriveContents(props: {
           </div>
           <ul>
             {folders.map((folder) => (
-              <FolderRow
-                key={folder.id}
-                folder={folder}
-                handleFolderClick={() => handleFolderClick(folder.id)}
-              />
+              <FolderRow key={folder.id} folder={folder} />
             ))}
             {files.map((file) => (
               <FileRow key={file.id} file={file} />
