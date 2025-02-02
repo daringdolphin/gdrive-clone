@@ -4,14 +4,14 @@ import { useMemo } from 'react'
 import { Upload, ChevronRight } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { FileRow, FolderRow } from './file-row'
-import type { files, folders } from '~/server/db/schema'
+import type { files_table, folders_table } from '~/server/db/schema'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function DriveContents(props: {
-  files: (typeof files.$inferSelect)[]
-  folders: (typeof folders.$inferSelect)[]
-  breadcrumbs: (typeof folders.$inferSelect)[]
+  files: (typeof files_table.$inferSelect)[]
+  folders: (typeof folders_table.$inferSelect)[]
+  breadcrumbs: (typeof folders_table.$inferSelect)[]
 }) {
   const { files, folders, breadcrumbs } = props
   // const router = useRouter()
