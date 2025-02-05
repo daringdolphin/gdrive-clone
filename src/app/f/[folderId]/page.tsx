@@ -18,6 +18,11 @@ export default async function GoogleDriveClone(props: {
   ])
 
   return (
-    <DriveContents files={files} folders={folders} breadcrumbs={breadcrumbs} />
+    <DriveContents
+      files={files}
+      folders={folders}
+      breadcrumbs={breadcrumbs}
+      currentFolderId={parsedFolderId}
+    />
   )
 }

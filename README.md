@@ -12,8 +12,9 @@
 
 - [x] change folders to link component, remove client states
 - [x] clean up db and data fetching patterns
-- [ ] real homepage
-- [ ] upload files to the right folder
+- [x] add "ownership" to files and folders
+- [x] upload files to the right folder
 - [ ] delete files
 - [ ] allow multiple filetypes
+- [ ] real homepage
 
