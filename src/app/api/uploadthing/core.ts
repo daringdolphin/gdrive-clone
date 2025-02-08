@@ -9,8 +9,8 @@ const f = createUploadthing()
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  imageUploader: f({
-    image: {
+  fileUploader: f({
+    blob: {
       /**
        * For full list of options and defaults, see the File Route API reference
        * @see https://docs.uploadthing.com/file-routes#route-config
@@ -47,7 +47,6 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
       console.log('Upload complete for userId:', metadata.userId)
-
       console.log('file url', file.url)
       const fileType = file.name.split('.').pop()
       await MUTATIONS.createFile({

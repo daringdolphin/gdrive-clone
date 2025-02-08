@@ -26,8 +26,8 @@ export const files_table = createTable(
     url: text('url').notNull(),
     parent: bigint('parent', { mode: 'number', unsigned: true }).notNull(),
     size: int('size').notNull(),
-    created_at: timestamp('created_at').defaultNow(),
-    updated_at: timestamp('updated_at').defaultNow(),
+    created_at: timestamp('created_at').defaultNow().notNull(),
+    updated_at: timestamp('updated_at').defaultNow().notNull(),
   },
   (tempTable) => {
     return [
@@ -48,8 +48,8 @@ export const folders_table = createTable(
     ownerId: text('owner').notNull(),
     name: text('name').notNull(),
     parent: bigint('parent', { mode: 'number', unsigned: true }).notNull(),
-    created_at: timestamp('created_at').defaultNow(),
-    updated_at: timestamp('updated_at').defaultNow(),
+    created_at: timestamp('created_at').defaultNow().notNull(),
+    updated_at: timestamp('updated_at').defaultNow().notNull(),
   },
   (tempTable) => {
     return [

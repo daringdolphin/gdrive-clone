@@ -1,3 +1,5 @@
-export default async function HomePage() {
-  return <div>Home Page</div>
+import { redirect } from 'next/navigation'
+
+export default function HomePage(): never {
+  redirect('/f/0')
 }

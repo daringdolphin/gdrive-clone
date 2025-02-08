@@ -75,7 +75,7 @@ export default function DriveContents(props: {
             </div>
             <div className="mt-4 flex justify-end">
               <UploadButton
-                endpoint="imageUploader"
+                endpoint="fileUploader"
                 input={{
                   folderId: props.currentFolderId,
                 }}
