@@ -7,6 +7,8 @@
 - [x] add auth
 - [x] add file uploading
 - [ ] add analytics
+- [ ] add delete files
+- [ ] onboarding
 
 ## TODO
 
