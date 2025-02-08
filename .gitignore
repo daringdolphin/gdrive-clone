@@ -52,3 +52,5 @@ yarn-error.log*
 sandbox
 src/app/sandbox
 .cursorrules
+
+netlify.toml

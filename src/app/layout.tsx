@@ -4,6 +4,7 @@ import { GeistSans } from 'geist/font/sans'
 import { type Metadata } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
 import { CSPostHogProvider } from './_providers/posthog-provider'
+import { Toaster } from '~/components/ui/toaster'
 
 export const metadata: Metadata = {
   title: 'Drive Clone',
@@ -21,6 +22,7 @@ export default function RootLayout({
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
           <CSPostHogProvider>{children}</CSPostHogProvider>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

@@ -8,6 +8,16 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import { UploadButton } from '~/components/ui/uploadthing'
 import { useRouter } from 'next/navigation'
 import { Upload } from 'lucide-react'
+import { useOptimistic } from 'react'
+interface DriveState {
+  files: (typeof files_table.$inferSelect)[]
+  folders: (typeof folders_table.$inferSelect)[]
+}
+
+interface DeleteAction {
+  type: 'file' | 'folder'
+  id: number
+}
 
 export default function DriveContents(props: {
   files: (typeof files_table.$inferSelect)[]
@@ -17,6 +27,22 @@ export default function DriveContents(props: {
 }) {
   const { files, folders, breadcrumbs } = props
   const navigate = useRouter()
+
+  // Optimistic state
+  const [optimisticState, addOptimisticState] = useOptimistic<
+    DriveState,
+    DeleteAction
+  >({ files, folders }, (state, action) => ({
+    ...state,
+    files:
+      action.type === 'file'
+        ? state.files.filter((f) => f.id !== action.id)
+        : state.files,
+    folders:
+      action.type === 'folder'
+        ? state.folders.filter((f) => f.id !== action.id)
+        : state.folders,
+  }))
 
   return (
     <>
@@ -64,12 +90,26 @@ export default function DriveContents(props: {
                   <div className="col-span-3">Size</div>
                 </div>
               </div>
-              <ul>
-                {folders.map((folder) => (
-                  <FolderRow key={folder.id} folder={folder} />
+              <ul className="list-none">
+                {optimisticState.folders.map((folder) => (
+                  <FolderRow
+                    key={folder.id}
+                    folder={folder}
+                    currentFolderId={props.currentFolderId}
+                    onDelete={() => {
+                      addOptimisticState({ type: 'folder', id: folder.id })
+                    }}
+                  />
                 ))}
-                {files.map((file) => (
-                  <FileRow key={file.id} file={file} />
+                {optimisticState.files.map((file) => (
+                  <FileRow
+                    key={file.id}
+                    file={file}
+                    currentFolderId={props.currentFolderId}
+                    onDelete={() => {
+                      addOptimisticState({ type: 'file', id: file.id })
+                    }}
+                  />
                 ))}
               </ul>
             </div>

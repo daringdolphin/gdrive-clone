@@ -1,6 +1,6 @@
 import 'server-only'
 import { db } from '~/server/db'
-import { eq } from 'drizzle-orm'
+import { eq, desc, and, inArray } from 'drizzle-orm'
 import {
   files_table as filesSchema,
   folders_table as foldersSchema,
@@ -38,8 +38,23 @@ export const QUERIES = {
     return folder[0]
   },
 
+  getFileById: async function getFileById(fileId: number) {
+    const file = await db
+      .select()
+      .from(filesSchema)
+      .where(eq(filesSchema.id, fileId))
+    if (!file[0]) {
+      throw new Error('File not found')
+    }
+    return file[0]
+  },
+
   getFiles: async function getFiles(folderId: number) {
-    return db.select().from(filesSchema).where(eq(filesSchema.parent, folderId))
+    return db
+      .select()
+      .from(filesSchema)
+      .where(eq(filesSchema.parent, folderId))
+      .orderBy(desc(filesSchema.created_at))
   },
 
   getFolders: async function getFolders(folderId: number) {
@@ -47,6 +62,7 @@ export const QUERIES = {
       .select()
       .from(foldersSchema)
       .where(eq(foldersSchema.parent, folderId))
+      .orderBy(desc(foldersSchema.created_at))
   },
 }
 
@@ -65,5 +81,60 @@ export const MUTATIONS = {
       ...input.file,
       ownerId: input.userId,
     })
+  },
+}
+
+export const DELETE_MUTATIONS = {
+  deleteFile: async function deleteFile(fileId: number, userId: string) {
+    const file = await QUERIES.getFileById(fileId)
+    if (file.ownerId !== userId) {
+      throw new Error('Unauthorized')
+    }
+
+    return await db
+      .delete(filesSchema)
+      .where(and(eq(filesSchema.id, fileId), eq(filesSchema.ownerId, userId)))
+  },
+
+  deleteFiles: async function deleteFiles(fileIds: number[], userId: string) {
+    return await db.transaction(async (tx) => {
+      // Verify ownership of all files first
+      const files = await Promise.all(
+        fileIds.map((id) => QUERIES.getFileById(id))
+      )
+
+      const unauthorizedFiles = files.filter((file) => file.ownerId !== userId)
+      if (unauthorizedFiles.length > 0) {
+        throw new Error('Unauthorized: Some files do not belong to the user')
+      }
+
+      return await tx
+        .delete(filesSchema)
+        .where(
+          and(inArray(filesSchema.id, fileIds), eq(filesSchema.ownerId, userId))
+        )
+    })
+  },
+
+  deleteFolder: async function deleteFolder(folderId: number, userId: string) {
+    return await db
+      .delete(foldersSchema)
+      .where(
+        and(eq(foldersSchema.id, folderId), eq(foldersSchema.ownerId, userId))
+      )
+  },
+
+  deleteFolders: async function deleteFolders(
+    folderIds: number[],
+    userId: string
+  ) {
+    return await db
+      .delete(foldersSchema)
+      .where(
+        and(
+          inArray(foldersSchema.id, folderIds),
+          eq(foldersSchema.ownerId, userId)
+        )
+      )
   },
 }
